@@ -1,13 +1,21 @@
 #!/bin/bash
 # Update pkg lists
+### Add checks for prior installs 
+
 
 echo "Updating package lists..."
 sudo apt-get update
+
 # zsh install
+which zsh > /dev/null 2>&1
+if [[ $? -eq 0 ]] ; then
 echo ''
-echo "Now installing zsh..."
+echo "zsh already installed..."
+else
+echo "zsh not found, now installing zsh..."
 echo ''
 sudo apt install zsh -y
+fi
 
 # Installing git completion
 echo ''
@@ -25,10 +33,19 @@ if ! curl "$URL" --silent --output "$HOME/.git-completion.bash"; then
 fi
 
 # oh-my-zsh install
+if [ -f ~/.oh-my-zsh ] ; then
 echo ''
-echo "Now installing oh-my-zsh..."
+echo "oh-my-zsh is already installed..."
+read -p "Would you like to update oh-my-zsh now?" -n 1 -r
+echo ''
+    if [[ $REPLY =~ ^[Yy]$ ] ; then
+    git pull
+    fi
+else
+echo "oh-my-zsh not found, now installing oh-my-zsh..."
 echo ''
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
 
 # oh-my-zsh plugin install
 echo ''
