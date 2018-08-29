@@ -150,8 +150,22 @@ add_line () {
   cat <(fgrep -i -v "$command" <(crontab -l)) <(echo "$job") | crontab -
 }
 
+jd_dotfiles () {
+  # symlink .dotfiles bin to ~
+  ln -s $HOME/.dotfiles/bin $HOME/bin
+
+  # symlink .dotfiles tmux to ~
+  ln -s $HOME/.dotfiles/tmux $HOME/.tmux
+
+  # symlink VSCode User Settings
+  ln -s $HOME/.dotfiles/code/settings.json $HOME/Library/Application\ Support/Code/User/settings.json
+
+  # install Source Code Pro nerd font
+  cp $HOME/.dotfiles/Source\ Code\ Pro\ Nerd\ Font\ Complete.ttf /Library/Fonts
+}
 setup_gitconfig
 install_dotfiles
+jd_dotfiles
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]
